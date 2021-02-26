@@ -3,6 +3,8 @@ package com.thoughtworks.capacity.gtb.mvc;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +29,8 @@ public class UserController {
     //GET /login?
     @GetMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public User login(@RequestParam(name = "username") String username,@RequestParam(name = "password") String password) {
-        return userService.findUserByUsernameAndPassword(username,password);
+    public User login(@RequestParam(name = "username") String username,
+                      @RequestParam(name = "password") String password) {
+        return userService.findUserByUsernameAndPassword(new User(0,username,password,null));
     }
 }

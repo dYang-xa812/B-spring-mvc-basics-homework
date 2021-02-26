@@ -21,14 +21,12 @@ public class UserService {
         this.users.put(user.getId(),user);
     }
 
-    public User findUserByUsernameAndPassword(String name,String password){
-        final User existedUser = this.users.values().stream()
+    public User findUserByUsernameAndPassword(User loginUser){
+        String name = loginUser.getUsername();
+        String password = loginUser.getPassword();
+        return this.users.values().stream()
                 .filter(u-> u.getUsername().equals(name))
                 .filter(user -> user.getPassword().equals(password))
-                .collect(Collectors.toList()).get(0);
-        if (existedUser == null) {
-            throw new IllegalArgumentException("login failure: wrong username or password");
-        }
-        return existedUser;
+                .findFirst().orElseThrow(() -> new UserNotFoundException("login failure: wrong username or password"));
     }
 }
