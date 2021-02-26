@@ -12,14 +12,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserService {
-    private final List<User> users = new ArrayList<>();
+    private final Map<Integer,User> users = new HashMap<>();
 
     public void createUser(User user) {
-        this.users.add(user);
+        if (users.values().stream().anyMatch(u ->u.getUsername().equals(user.getUsername()))) {
+            throw new IllegalArgumentException("this user is already existed");
+        }
+        this.users.put(user.getId(),user);
     }
 
     public User findUserByUsernameAndPassword(String name,String password){
-        final User existedUser = this.users.stream()
+        final User existedUser = this.users.values().stream()
                 .filter(u-> u.getUsername().equals(name))
                 .filter(user -> user.getPassword().equals(password))
                 .collect(Collectors.toList()).get(0);
